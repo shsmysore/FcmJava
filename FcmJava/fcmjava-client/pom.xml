@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.github.shsmysore.fcmjava</groupId>
+        <groupId>io.github.shsmysore.fcmjava</groupId>
         <artifactId>fcmjava-parent</artifactId>
         <version>2.5</version>
         <relativePath>..</relativePath>
@@ -23,7 +23,7 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.github.shsmysore.fcmjava</groupId>
+            <groupId>io.github.shsmysore.fcmjava</groupId>
             <artifactId>fcmjava-core</artifactId>
             <version>${project.version}</version>
         </dependency>

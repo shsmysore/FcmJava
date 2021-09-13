@@ -27,13 +27,13 @@ You can add the following dependencies to your pom.xml to include [FcmJava] in y
 
 ```xml
 <dependency>
-  <groupId>com.github.shsmysore.fcmjava</groupId>
+  <groupId>io.github.shsmysore.fcmjava</groupId>
   <artifactId>fcmjava-core</artifactId>
   <version>2.5</version>
 </dependency>
 
 <dependency>
-  <groupId>com.github.shsmysore.fcmjava</groupId>
+  <groupId>io.github.shsmysore.fcmjava</groupId>
   <artifactId>fcmjava-client</artifactId>
   <version>2.5</version>
 </dependency>
@@ -49,15 +49,15 @@ The Quickstart shows you how to work with [FcmJava].
 // Copyright (c) Philipp Wagner. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-package com.github.shsmysore.fcmjava.integration;
+package io.github.shsmysore.fcmjava.integration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.shsmysore.fcmjava.client.FcmClient;
-import com.github.shsmysore.fcmjava.constants.Constants;
-import com.github.shsmysore.fcmjava.http.options.IFcmClientSettings;
-import com.github.shsmysore.fcmjava.model.options.FcmMessageOptions;
-import com.github.shsmysore.fcmjava.model.topics.Topic;
-import com.github.shsmysore.fcmjava.requests.topic.TopicUnicastMessage;
+import io.github.shsmysore.fcmjava.client.FcmClient;
+import io.github.shsmysore.fcmjava.constants.Constants;
+import io.github.shsmysore.fcmjava.http.options.IFcmClientSettings;
+import io.github.shsmysore.fcmjava.model.options.FcmMessageOptions;
+import io.github.shsmysore.fcmjava.model.topics.Topic;
+import io.github.shsmysore.fcmjava.requests.topic.TopicUnicastMessage;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -157,12 +157,12 @@ Firebase Cloud Messaging API Key in code. This makes it possible to accidentally
 // Copyright (c) Philipp Wagner. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-package com.github.shsmysore.fcmjava.client.tests.settings;
+package io.github.shsmysore.fcmjava.client.tests.settings;
 
-import com.github.shsmysore.fcmjava.client.FcmClient;
-import com.github.shsmysore.fcmjava.constants.Constants;
-import com.github.shsmysore.fcmjava.http.client.IFcmClient;
-import com.github.shsmysore.fcmjava.http.options.IFcmClientSettings;
+import io.github.shsmysore.fcmjava.client.FcmClient;
+import io.github.shsmysore.fcmjava.constants.Constants;
+import io.github.shsmysore.fcmjava.http.client.IFcmClient;
+import io.github.shsmysore.fcmjava.http.options.IFcmClientSettings;
 import org.junit.Test;
 
 class FixedFcmClientSettings implements IFcmClientSettings {
@@ -214,12 +214,12 @@ The following test shows how to build the ``FcmClient`` with a custom ``HttpClie
 // Copyright (c) Philipp Wagner. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-package com.github.shsmysore.fcmjava.client.tests;
+package io.github.shsmysore.fcmjava.client.tests;
 
-import com.github.shsmysore.fcmjava.client.FcmClient;
-import com.github.shsmysore.fcmjava.client.http.apache.DefaultHttpClient;
-import com.github.shsmysore.fcmjava.http.client.IFcmClient;
-import com.github.shsmysore.fcmjava.http.options.IFcmClientSettings;
+import io.github.shsmysore.fcmjava.client.FcmClient;
+import io.github.shsmysore.fcmjava.client.http.apache.DefaultHttpClient;
+import io.github.shsmysore.fcmjava.http.client.IFcmClient;
+import io.github.shsmysore.fcmjava.http.options.IFcmClientSettings;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
