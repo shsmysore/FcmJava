@@ -27,8 +27,12 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * This DefaultHttpClient is based on the Apache DefaultHttpClient.
@@ -41,6 +45,8 @@ public class DefaultHttpClient implements IHttpClient {
     private final IFcmClientSettings settings;
     private final IJsonSerializer serializer;
     private final CloseableHttpClient client;
+
+    private static final HttpClient shreeClient = HttpClient.newHttpClient();
 
     public DefaultHttpClient(IFcmClientSettings settings) {
         this(settings, HttpClientBuilder.create());
@@ -135,6 +141,19 @@ public class DefaultHttpClient implements IHttpClient {
                 .build();
     }
 
+    private <TRequestMessage> HttpRequest shreeBuildPostRequest(TRequestMessage requestMessage) {
+
+        // Get the JSON representation of the given request message:
+        String content = serializer.serialize(requestMessage);
+
+        return HttpRequest.newBuilder()
+                .uri(URI.create("https://fcm.googleapis.com/fcm/send"))
+                .header("Content-Type", "application/json")
+                .header("Authorization", String.format("key=%s", settings.getApiKey()))
+                .POST(HttpRequest.BodyPublishers.ofString(content))
+                .build();
+    }
+
     private void evaluateResponse(HttpResponse httpResponse) {
 
         // Early exit, if there is no HTTP Response:
@@ -198,6 +217,18 @@ public class DefaultHttpClient implements IHttpClient {
             return internalPost(requestMessage, responseType);
         } catch (IOException e) {
             throw new HttpCommunicationException("Error making POST Request", e);
+        }
+    }
+
+    @Override
+    public <TRequestMessage> CompletableFuture<String> postAsync(TRequestMessage requestMessage) {
+        try {
+            HttpRequest request = shreeBuildPostRequest(requestMessage);
+
+            return shreeClient.sendAsync(request, java.net.http.HttpResponse.BodyHandlers.ofString())
+                    .thenApply(java.net.http.HttpResponse::body);
+        } catch (Exception e) {
+            throw new RuntimeException("Something went wrong.", e);
         }
     }
 
