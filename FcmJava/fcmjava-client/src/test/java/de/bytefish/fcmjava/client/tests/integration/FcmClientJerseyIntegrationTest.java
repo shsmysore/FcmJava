@@ -17,6 +17,7 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.POST;
@@ -26,6 +27,7 @@ import javax.ws.rs.core.Response;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
+@Ignore
 public class FcmClientJerseyIntegrationTest extends JerseyTest {
     private RestResource restResource;
     private FcmClient fcmClient;
