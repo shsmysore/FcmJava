@@ -4,14 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.bytefish.fcmjava</groupId>
+    <groupId>com.github.shsmysore.fcmjava</groupId>
     <artifactId>fcmjava-parent</artifactId>
     <version>2.5</version>
 
     <name>fcmjava</name>
     <packaging>pom</packaging>
     <description>Library for simplified access to Firebase Cloud Messaging (FCM).</description>
-    <url>http://www.github.com/bytefish/FcmJava</url>
+    <url>https://github.com/shsmysore/FcmJava</url>
 
     <build>
         <plugins>
