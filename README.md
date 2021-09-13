@@ -27,13 +27,13 @@ You can add the following dependencies to your pom.xml to include [FcmJava] in y
 
 ```xml
 <dependency>
-  <groupId>de.bytefish.fcmjava</groupId>
+  <groupId>com.github.shsmysore.fcmjava</groupId>
   <artifactId>fcmjava-core</artifactId>
   <version>2.5</version>
 </dependency>
 
 <dependency>
-  <groupId>de.bytefish.fcmjava</groupId>
+  <groupId>com.github.shsmysore.fcmjava</groupId>
   <artifactId>fcmjava-client</artifactId>
   <version>2.5</version>
 </dependency>
@@ -49,15 +49,15 @@ The Quickstart shows you how to work with [FcmJava].
 // Copyright (c) Philipp Wagner. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-package de.bytefish.fcmjava.integration;
+package com.github.shsmysore.fcmjava.integration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import de.bytefish.fcmjava.client.FcmClient;
-import de.bytefish.fcmjava.constants.Constants;
-import de.bytefish.fcmjava.http.options.IFcmClientSettings;
-import de.bytefish.fcmjava.model.options.FcmMessageOptions;
-import de.bytefish.fcmjava.model.topics.Topic;
-import de.bytefish.fcmjava.requests.topic.TopicUnicastMessage;
+import com.github.shsmysore.fcmjava.client.FcmClient;
+import com.github.shsmysore.fcmjava.constants.Constants;
+import com.github.shsmysore.fcmjava.http.options.IFcmClientSettings;
+import com.github.shsmysore.fcmjava.model.options.FcmMessageOptions;
+import com.github.shsmysore.fcmjava.model.topics.Topic;
+import com.github.shsmysore.fcmjava.requests.topic.TopicUnicastMessage;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -157,12 +157,12 @@ Firebase Cloud Messaging API Key in code. This makes it possible to accidentally
 // Copyright (c) Philipp Wagner. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-package de.bytefish.fcmjava.client.tests.settings;
+package com.github.shsmysore.fcmjava.client.tests.settings;
 
-import de.bytefish.fcmjava.client.FcmClient;
-import de.bytefish.fcmjava.constants.Constants;
-import de.bytefish.fcmjava.http.client.IFcmClient;
-import de.bytefish.fcmjava.http.options.IFcmClientSettings;
+import com.github.shsmysore.fcmjava.client.FcmClient;
+import com.github.shsmysore.fcmjava.constants.Constants;
+import com.github.shsmysore.fcmjava.http.client.IFcmClient;
+import com.github.shsmysore.fcmjava.http.options.IFcmClientSettings;
 import org.junit.Test;
 
 class FixedFcmClientSettings implements IFcmClientSettings {
@@ -214,12 +214,12 @@ The following test shows how to build the ``FcmClient`` with a custom ``HttpClie
 // Copyright (c) Philipp Wagner. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-package de.bytefish.fcmjava.client.tests;
+package com.github.shsmysore.fcmjava.client.tests;
 
-import de.bytefish.fcmjava.client.FcmClient;
-import de.bytefish.fcmjava.client.http.apache.DefaultHttpClient;
-import de.bytefish.fcmjava.http.client.IFcmClient;
-import de.bytefish.fcmjava.http.options.IFcmClientSettings;
+import com.github.shsmysore.fcmjava.client.FcmClient;
+import com.github.shsmysore.fcmjava.client.http.apache.DefaultHttpClient;
+import com.github.shsmysore.fcmjava.http.client.IFcmClient;
+import com.github.shsmysore.fcmjava.http.options.IFcmClientSettings;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -274,59 +274,10 @@ public class HttpBuilderConfigurationTest {
 }
 ```
 
-## FAQ ##
-
-### How to interpret the FCM Response Messages ###
-
-[Issue #30](https://github.com/bytefish/FcmJava/issues/30) explains how to interpret the FCM response message and handle errors.
-
-The user [@yakuninv](https://github.com/yakuninv) asks how to handle an errorneous ``FcmMessageResultItem`` in the ``FcmMessageResponse``:
-
-> As part of error handling when sending ``NotificationMulticastMessage`` I need to map an erroneous ``FcmMessageResultItem`` to the token that caused an error. A typical use case is to remove not registered tokens from my Database.
-> 
-> Can I rely on the order of ``FcmMessageResultItems`` in the ``FcmMessageResponse``? Does it correspond to the order of ``registrationIds`` provided in the constructor of the ``NotificationMulticastMessage``?
-
-The user [@culebras](https://github.com/culebras) has written a good summary:
-
-> Take a look into this thread, I think it will answer your question (looks like **the order is the same**):
-> 
-> * https://stackoverflow.com/questions/40518125/wich-fcm-registration-id-has-failed-when-targeted-for-multiple-registration-ids
-> 
-> - So for the `FcmMessageResultItems` with `errorCode` equals to `NotRegistered` you will want to remove those tokens for your DB.
-> - For the `FcmMessageResultItems` with `errorCode` equals to `Unavailable` maybe you will want to resend the message for those tokens.
-> - For the `FcmMessageResultItems` with `registration_id` not `null`, you will want to update the tokens in your  DB (I think that the new `registration_id` can be obtained in this library from `FcmMessageResultItem.getCanonicalRegistrationId`).
-> - Etc.
-> 
-> But, regarding to the Canonical IDs, you have to consider this:
-> 
-> * https://stackoverflow.com/questions/45018247/android-google-fcm-canonical-ids-how-to-reproduce-in-non-production-or-tests
-> 
-> Because it looks like that:
-> 
-> > In FCM, it seems the Canonical IDs are no longer used (or at the very least extremely rarely) because of how the Instance ID service works. To put it simply, the service works that there would only be one valid token per App Instance.
-> 
-> So the updating of tokens in your DB for those tokens which are refreshed in FCM cloud would be mostly done in the method `onTokenRefresh()` in your Android client application (in this method is where the device should send the token to your DB the first time the device register itself to the FCM and also when the token is refreshed in FCM).
-> 
-> So, it seems that is not very likely that you are going to receive `FcmMessageResultItem` with `registration_id` not `null`, but anyway, it is good idea to also expect this and update the canonical token of those `FcmMessageResultItem`.
-
-## Android Client ##
-
-I have decided to clone the messaging quickstart sample of Google, which is available at:
-
-* [https://github.com/firebase/quickstart-android/tree/master/messaging](https://github.com/firebase/quickstart-android/tree/master/messaging)
-
-Now first subscribe to the ``news`` topic, then execute the above [FcmJava] application. 
-
-The Android app will now receive a message with the sent data included:
-
-```
-09-17 21:10:45.250 10882-11300/com.google.firebase.quickstart.fcm D/MyFirebaseMsgService: From: /topics/news
-09-17 21:10:45.251 10882-11300/com.google.firebase.quickstart.fcm D/MyFirebaseMsgService: Message data payload: {lastName=Wagner, firstName=Philipp}
-```
 
 ## Additional Resources ##
 
 * [Send messages from Spring Boot to Ionic 2 over FCM](https://golb.hplar.ch/p/Send-messages-from-Spring-Boot-to-Ionic-2-over-FCM)
 
-[FcmJava]: https://github.com/bytefish/FcmJava
+[FcmJava]: https://github.com/shsmysore/FcmJava
 [Firebase Cloud Messaging (FCM) API]: https://firebase.google.com
