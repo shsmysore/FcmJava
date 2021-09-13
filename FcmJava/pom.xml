@@ -71,6 +71,12 @@
     <developers>
 
         <developer>
+            <id>shsmysore</id>
+            <name>Shree Harsha</name>
+            <url>https://www.linkedin.com/in/shreeharsha93</url>
+        </developer>
+
+        <developer>
             <id>bytefish</id>
             <name>Philipp Wagner</name>
             <url>http://www.bytefish.de</url>
@@ -91,9 +97,9 @@
     </developers>
 
     <scm>
-        <url>https://github.com/bytefish/FcmJava</url>
-        <connection>scm:git:git://github.com/bytefish/FcmJava.git</connection>
-        <developerConnection>scm:git:git@github.com:bytefish/FcmJava.git</developerConnection>
+        <connection>scm:git:git://github.com/shsmysore/FcmJava.git</connection>
+        <developerConnection>scm:git:ssh://github.com:shsmysore/FcmJava.git</developerConnection>
+        <url>https://github.com/shsmysore/FcmJava/tree/master</url>
     </scm>
 
     <distributionManagement>
