@@ -6,7 +6,7 @@
 
     <groupId>io.github.shsmysore.fcmjava</groupId>
     <artifactId>fcmjava-parent</artifactId>
-    <version>3.0</version>
+    <version>3.0-RC1</version>
 
     <name>fcmjava</name>
     <packaging>pom</packaging>
