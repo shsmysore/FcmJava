@@ -21,6 +21,8 @@ import io.github.shsmysore.fcmjava.responses.CreateDeviceGroupMessageResponse;
 import io.github.shsmysore.fcmjava.responses.FcmMessageResponse;
 import io.github.shsmysore.fcmjava.responses.TopicMessageResponse;
 
+import java.util.concurrent.CompletableFuture;
+
 public class FcmClient implements IFcmClient {
 
     private final IFcmClientSettings settings;
@@ -95,6 +97,10 @@ public class FcmClient implements IFcmClient {
 
     protected <TRequestMessage, TResponseMessage> TResponseMessage post(TRequestMessage requestMessage, Class<TResponseMessage> responseType) {
         return httpClient.post(requestMessage, responseType);
+    }
+
+    public <TRequestMessage> CompletableFuture<String> postAsync(TRequestMessage requestMessage) {
+        return httpClient.postAsync(requestMessage);
     }
 
     protected <TRequestMessage> void post(TRequestMessage requestMessage) {
