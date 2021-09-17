@@ -52,63 +52,100 @@ public class FcmClient implements IFcmClient {
 
     @Override
     public FcmMessageResponse send(DataMulticastMessage message) {
-        return post(message, FcmMessageResponse.class);
+        return postSync(message, FcmMessageResponse.class);
     }
 
     @Override
     public FcmMessageResponse send(NotificationMulticastMessage notification) {
-        return post(notification, FcmMessageResponse.class);
+        return postSync(notification, FcmMessageResponse.class);
     }
 
     @Override
     public FcmMessageResponse send(DataUnicastMessage message) {
-        return post(message, FcmMessageResponse.class);
+        return postSync(message, FcmMessageResponse.class);
     }
 
     @Override
     public FcmMessageResponse send(NotificationUnicastMessage notification) {
-        return post(notification, FcmMessageResponse.class);
+        return postSync(notification, FcmMessageResponse.class);
     }
 
     @Override
     public CreateDeviceGroupMessageResponse send(CreateDeviceGroupMessage message) {
-        return post(message, CreateDeviceGroupMessageResponse.class);
+        return postSync(message, CreateDeviceGroupMessageResponse.class);
     }
 
     @Override
     public TopicMessageResponse send(TopicUnicastMessage message) {
-        return post(message, TopicMessageResponse.class);
+        return postSync(message, TopicMessageResponse.class);
     }
 
     @Override
     public TopicMessageResponse send(TopicMulticastMessage message) {
-        return post(message, TopicMessageResponse.class);
+        return postSync(message, TopicMessageResponse.class);
     }
 
     @Override
     public void send(RemoveDeviceGroupMessage message) {
-        post(message);
+        postSync(message, Void.class);
     }
 
     @Override
     public void send(AddDeviceGroupMessage message) {
-        post(message);
+        postSync(message, Void.class);
     }
 
-    protected <TRequestMessage, TResponseMessage> TResponseMessage post(TRequestMessage requestMessage, Class<TResponseMessage> responseType) {
-        return httpClient.post(requestMessage, responseType);
-    }
-
-    public <TRequestMessage> CompletableFuture<String> postAsync(TRequestMessage requestMessage) {
-        return httpClient.postAsync(requestMessage);
-    }
-
-    protected <TRequestMessage> void post(TRequestMessage requestMessage) {
-        httpClient.post(requestMessage);
+    // Async
+    @Override
+    public CompletableFuture<FcmMessageResponse> sendAsync(DataMulticastMessage message) {
+        return postAsync(message, FcmMessageResponse.class);
     }
 
     @Override
-    public void close() throws Exception {
-        httpClient.close();
+    public CompletableFuture<FcmMessageResponse> sendAsync(NotificationMulticastMessage notification) {
+        return postAsync(notification, FcmMessageResponse.class);
+    }
+
+    @Override
+    public CompletableFuture<FcmMessageResponse> sendAsync(DataUnicastMessage message) {
+        return postAsync(message, FcmMessageResponse.class);
+    }
+
+    @Override
+    public CompletableFuture<FcmMessageResponse> sendAsync(NotificationUnicastMessage notification) {
+        return postAsync(notification, FcmMessageResponse.class);
+    }
+
+    @Override
+    public CompletableFuture<CreateDeviceGroupMessageResponse> sendAsync(CreateDeviceGroupMessage message) {
+        return postAsync(message, CreateDeviceGroupMessageResponse.class);
+    }
+
+    @Override
+    public CompletableFuture<TopicMessageResponse> sendAsync(TopicUnicastMessage message) {
+        return postAsync(message, TopicMessageResponse.class);
+    }
+
+    @Override
+    public CompletableFuture<TopicMessageResponse> sendAsync(TopicMulticastMessage message) {
+        return postAsync(message, TopicMessageResponse.class);
+    }
+
+    @Override
+    public CompletableFuture<Void> sendAsync(RemoveDeviceGroupMessage message) {
+        return postAsync(message, Void.class);
+    }
+
+    @Override
+    public CompletableFuture<Void> sendAsync(AddDeviceGroupMessage message) {
+        return postAsync(message, Void.class);
+    }
+
+    protected <TRequestMessage, TResponseMessage> TResponseMessage postSync(TRequestMessage requestMessage, Class<TResponseMessage> responseType) {
+        return httpClient.postSync(requestMessage, responseType);
+    }
+
+    public <TRequestMessage, TResponseMessage> CompletableFuture<TResponseMessage> postAsync(TRequestMessage requestMessage, Class<TResponseMessage> responseType) {
+        return httpClient.postAsync(requestMessage, responseType);
     }
 }
