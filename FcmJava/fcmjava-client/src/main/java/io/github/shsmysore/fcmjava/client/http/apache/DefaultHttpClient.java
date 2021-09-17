@@ -25,10 +25,14 @@ public class DefaultHttpClient implements IHttpClient {
     private final IFcmClientSettings settings;
     private final IJsonSerializer serializer;
 
+    private static final HttpClient.Builder defaultHttpBuilder = HttpClient
+            .newBuilder()
+            .version(HttpClient.Version.HTTP_1_1);
+
     private final HttpClient client;
 
     public DefaultHttpClient(IFcmClientSettings settings) {
-        this(settings, HttpClient.newBuilder());
+        this(settings, defaultHttpBuilder);
     }
 
     public DefaultHttpClient(IFcmClientSettings settings, HttpClient.Builder httpClientBuilder) {
@@ -36,7 +40,7 @@ public class DefaultHttpClient implements IHttpClient {
     }
 
     public DefaultHttpClient(IFcmClientSettings settings, IJsonSerializer serializer) {
-        this(settings, serializer, HttpClient.newBuilder());
+        this(settings, serializer, defaultHttpBuilder);
     }
 
     public DefaultHttpClient(IFcmClientSettings settings, IJsonSerializer serializer, HttpClient.Builder httpClientBuilder) {
