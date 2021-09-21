@@ -16,7 +16,9 @@ import io.github.shsmysore.fcmjava.responses.CreateDeviceGroupMessageResponse;
 import io.github.shsmysore.fcmjava.responses.FcmMessageResponse;
 import io.github.shsmysore.fcmjava.responses.TopicMessageResponse;
 
-public interface IFcmClient extends AutoCloseable {
+import java.util.concurrent.CompletableFuture;
+
+public interface IFcmClient {
 
     FcmMessageResponse send(DataMulticastMessage message);
 
@@ -35,5 +37,24 @@ public interface IFcmClient extends AutoCloseable {
     void send(RemoveDeviceGroupMessage message);
 
     void send(AddDeviceGroupMessage message);
+
+    // Async
+    CompletableFuture<FcmMessageResponse> sendAsync(DataMulticastMessage message);
+
+    CompletableFuture<FcmMessageResponse> sendAsync(NotificationMulticastMessage notification);
+
+    CompletableFuture<FcmMessageResponse> sendAsync(DataUnicastMessage message);
+
+    CompletableFuture<FcmMessageResponse> sendAsync(NotificationUnicastMessage notification);
+
+    CompletableFuture<CreateDeviceGroupMessageResponse> sendAsync(CreateDeviceGroupMessage message);
+
+    CompletableFuture<TopicMessageResponse> sendAsync(TopicUnicastMessage message);
+
+    CompletableFuture<TopicMessageResponse> sendAsync(TopicMulticastMessage message);
+
+    CompletableFuture<Void> sendAsync(RemoveDeviceGroupMessage message);
+
+    CompletableFuture<Void> sendAsync(AddDeviceGroupMessage message);
 
 }

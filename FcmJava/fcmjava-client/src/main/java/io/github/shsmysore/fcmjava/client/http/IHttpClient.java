@@ -8,12 +8,10 @@ import java.util.concurrent.CompletableFuture;
 /**
  * An DefaultHttpClient is used to send Requests to FCM.
  */
-public interface IHttpClient extends AutoCloseable {
+public interface IHttpClient {
 
-    <TRequestMessage> void post(TRequestMessage requestMessage);
+    <TRequestMessage, TResponseMessage> TResponseMessage postSync(TRequestMessage requestMessage, Class<TResponseMessage> responseType);
 
-    <TRequestMessage, TResponseMessage> TResponseMessage post(TRequestMessage requestMessage, Class<TResponseMessage> responseType);
-
-    <TRequestMessage> CompletableFuture<String> postAsync(TRequestMessage requestMessage);
+    <TRequestMessage, TResponseMessage> CompletableFuture<TResponseMessage> postAsync(TRequestMessage requestMessage, Class<TResponseMessage> responseType);
 
 }
