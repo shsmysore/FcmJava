@@ -6,6 +6,9 @@ package io.github.shsmysore.fcmjava.client.http.apache;
 import io.github.shsmysore.fcmjava.client.http.IHttpClient;
 import io.github.shsmysore.fcmjava.client.serializer.IJsonSerializer;
 import io.github.shsmysore.fcmjava.client.serializer.JsonSerializer;
+import io.github.shsmysore.fcmjava.exceptions.FcmAuthenticationException;
+import io.github.shsmysore.fcmjava.exceptions.FcmBadRequestException;
+import io.github.shsmysore.fcmjava.exceptions.FcmGeneralException;
 import io.github.shsmysore.fcmjava.http.options.IFcmClientSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,6 +96,7 @@ public class DefaultHttpClient implements IHttpClient {
             HttpResponse.BodyHandler<String> handler = java.net.http.HttpResponse.BodyHandlers.ofString();
             return client.sendAsync(request, handler)
                     .thenComposeAsync(res -> tryResend(client, request, handler, 1, res))
+                    .thenApply(this::evaluateResponse)
                     .thenApply(java.net.http.HttpResponse::body)
                     .thenApply(responseBody -> serializer.deserialize(responseBody, responseType));
         } catch (Exception e) {
@@ -105,7 +109,7 @@ public class DefaultHttpClient implements IHttpClient {
                                                                    HttpResponse.BodyHandler<T> handler,
                                                                    int count,
                                                                    HttpResponse<T> resp) {
-        if (resp.statusCode() == 200 || count > MAX_RETRY) {
+        if (resp.statusCode() < 500 || count > MAX_RETRY) {
             return CompletableFuture.completedFuture(resp);
         } else {
             LOGGER.info("Retrying the fcm call. Last status: {}, retry count: {}", resp.statusCode(), count);
@@ -119,6 +123,23 @@ public class DefaultHttpClient implements IHttpClient {
             return client.sendAsync(request, handler)
                     .thenComposeAsync(res -> tryResend(client, request, handler, count + 1, res));
         }
+    }
+
+    private <T> HttpResponse<T> evaluateResponse(HttpResponse<T> resp) {
+
+        if (resp.statusCode() == 401 || resp.statusCode() == 403) {
+            throw new FcmAuthenticationException("Unauthorized");
+        }
+
+        if (resp.statusCode() == 400) {
+            throw new FcmBadRequestException("Bad request");
+        }
+
+        if (resp.statusCode() >= 500) {
+            throw new FcmGeneralException(resp.statusCode(), "Something went wrong.");
+        }
+
+        return resp;
     }
 
     @Override
