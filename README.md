@@ -29,13 +29,13 @@ You can add the following dependencies to your pom.xml to include [FcmJava] in y
 <dependency>
   <groupId>io.github.shsmysore.fcmjava</groupId>
   <artifactId>fcmjava-core</artifactId>
-  <version>2.5</version>
+  <version>3.2.0</version>
 </dependency>
 
 <dependency>
   <groupId>io.github.shsmysore.fcmjava</groupId>
   <artifactId>fcmjava-client</artifactId>
-  <version>2.5</version>
+  <version>3.2.0</version>
 </dependency>
 ```
 
