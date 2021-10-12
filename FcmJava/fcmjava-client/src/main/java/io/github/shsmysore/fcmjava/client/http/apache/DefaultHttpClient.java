@@ -13,10 +13,12 @@ import io.github.shsmysore.fcmjava.http.options.IFcmClientSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
@@ -94,8 +96,7 @@ public class DefaultHttpClient implements IHttpClient {
             HttpRequest request = buildPostRequest(requestMessage);
 
             HttpResponse.BodyHandler<String> handler = java.net.http.HttpResponse.BodyHandlers.ofString();
-            return client.sendAsync(request, handler)
-                    .thenComposeAsync(res -> tryResend(client, request, handler, 1, res))
+            return retrySend(client, request, handler, 1, null)
                     .thenApply(this::evaluateResponse)
                     .thenApply(java.net.http.HttpResponse::body)
                     .thenApply(responseBody -> serializer.deserialize(responseBody, responseType));
@@ -104,24 +105,51 @@ public class DefaultHttpClient implements IHttpClient {
         }
     }
 
-    private <T> CompletableFuture<HttpResponse<T>> tryResend(HttpClient client,
-                                                                   HttpRequest request,
-                                                                   HttpResponse.BodyHandler<T> handler,
-                                                                   int count,
-                                                                   HttpResponse<T> resp) {
-        if (resp.statusCode() < 500 || count > MAX_RETRY) {
+    private <T> CompletableFuture<HttpResponse<T>> retrySend(HttpClient client,
+                                                             HttpRequest request,
+                                                             HttpResponse.BodyHandler<T> handler,
+                                                             int count,
+                                                              HttpResponse<T> resp) {
+        if ((resp != null && resp.statusCode() < 500) || count > MAX_RETRY) {
+            return toResponse(resp);
+        } else {
+            return client.sendAsync(request, handler)
+                    .thenApply(Optional::of)
+                    .exceptionally(ex -> {
+                        // It is useful to retry on IOExceptions we well, along with server errors.
+                        Throwable cause = ex.getCause();
+                        if (cause instanceof IOException) {
+                            LOGGER.info("IOException - {}. Calling the retrySend again...", cause.getMessage());
+                            return Optional.empty();
+                        }
+                        throw new RuntimeException("FCM call failed", cause);
+                    })
+                    .thenComposeAsync(res -> {
+                        if (res.isEmpty()) {
+                            fixedDelay();
+                        }
+                        HttpResponse<T> currentResponse = res.orElse(null);
+                        return retrySend(client, request, handler, count + 1, currentResponse);
+                    });
+        }
+    }
+
+    private <T> CompletableFuture<HttpResponse<T>> toResponse(HttpResponse<T> resp) {
+        if (resp != null) {
             return CompletableFuture.completedFuture(resp);
         } else {
-            LOGGER.info("Retrying the fcm call. Last status: {}, retry count: {}", resp.statusCode(), count);
-            try {
-                long waitMilliSec = random.nextInt(29000) + 1000;
-                Thread.sleep(waitMilliSec);
-            } catch (InterruptedException e) {
-                return CompletableFuture.completedFuture(resp);
-            }
+            LOGGER.error("Failed on all retries.");
+            throw new RuntimeException("All retries failed.");
+        }
+    }
 
-            return client.sendAsync(request, handler)
-                    .thenComposeAsync(res -> tryResend(client, request, handler, count + 1, res));
+    private void fixedDelay() {
+        try {
+            long waitMilliSec = random.nextInt(29000) + 1000;
+            Thread.sleep(waitMilliSec);
+        } catch (InterruptedException e) {
+            LOGGER.warn("Delay interrupted.");
+            throw new RuntimeException("Delay interrupted.");
         }
     }
 
