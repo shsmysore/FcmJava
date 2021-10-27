@@ -201,15 +201,6 @@ public class FcmClientJerseyIntegrationTest extends JerseyTest {
         return fcmClient.send(new NotificationUnicastMessage(options, "device", payload));
     }
 
-    @Override
-    protected Application configure() {
-        restResource = new RestResource();
-        forceSet(TestProperties.CONTAINER_PORT, "0");
-
-        return new ResourceConfig()
-                .register(restResource);
-    }
-
     @Path("send")
     public static class RestResource {
         public Response response;

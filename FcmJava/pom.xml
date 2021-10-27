@@ -138,10 +138,14 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jackson.version>2.7.4</jackson.version>
+        <jackson.version>2.13.0</jackson.version>
         <mockito.version>1.10.19</mockito.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.2</junit.version>
         <slf4j.version>1.7.32</slf4j.version>
+        <commons-io.version>2.11.0</commons-io.version>
+        <glassfish-jersey.version>3.0.3</glassfish-jersey.version>
+        <apache-httpclient.version>4.5.13</apache-httpclient.version>
+        <javax.ws.rs.version>2.1.1</javax.ws.rs.version>
     </properties>
 
 
@@ -270,6 +274,30 @@
                 <version>${slf4j.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
+            </dependency>
+
+            <dependency>
+                <scope>test</scope>
+                <groupId>org.glassfish.jersey.test-framework.providers</groupId>
+                <artifactId>jersey-test-framework-provider-jdk-http</artifactId>
+                <version>${glassfish-jersey.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${apache-httpclient.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.ws.rs</groupId>
+                <artifactId>javax.ws.rs-api</artifactId>
+                <version>${javax.ws.rs.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
